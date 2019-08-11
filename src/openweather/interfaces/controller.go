@@ -35,3 +35,13 @@ func (controller *Controller) Get(ctx context.Context, r *web.Request) web.Resul
 	city := r.Params["city"]
 	return controller.responder.Render("weather/weather", viewData{City: city, Weather: controller.service.GetWeatherByCityName(ctx, city)})
 }
+
+// Data returns the weather struct for the given city
+func (controller *Controller) Data(ctx context.Context, _ *web.Request, callParams web.RequestParams) interface{} {
+	city, ok := callParams["city"]
+	if !ok {
+		return domain.Weather{}
+	}
+
+	return controller.service.GetWeatherByCityName(ctx, city)
+}

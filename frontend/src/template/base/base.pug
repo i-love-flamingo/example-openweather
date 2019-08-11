@@ -9,6 +9,10 @@ html
     header
       .logo
       h1 Flamingo Carotene Example
+      - var weatherWiesbaden = data('openweather.detail', {'city':'Wiesbaden'})
+      .weather #{weatherWiesbaden.locationName}:
+        img(src='http://openweathermap.org/img/w/${weatherWiesbaden.iconCode}.png')
+        | #{weatherWiesbaden.temp} °C #{weatherWiesbaden.description}
 
     .content
       block content

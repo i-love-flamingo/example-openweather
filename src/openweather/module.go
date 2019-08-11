@@ -32,5 +32,6 @@ func (r *routes) Inject(controller *interfaces.Controller) {
 // Routes definition for the module
 func (r *routes) Routes(registry *web.RouterRegistry) {
 	registry.HandleGet("openweather.detail", r.controller.Get)
+	registry.HandleData("openweather.detail", r.controller.Data)
 	registry.Route("/weather/:city", "openweather.detail")
 }
