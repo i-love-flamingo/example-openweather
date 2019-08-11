@@ -1,3 +1,6 @@
 cmd.name: openweather
 debug.mode: true
 
+openweather:
+  apiurl: http://api.openweathermap.org/data/2.5/
+  apikey: d6cca0cbd5a5f50515df2afba93e5fa6

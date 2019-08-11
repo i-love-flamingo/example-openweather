@@ -1,0 +1,268 @@
+diff --git a/config/config.yml b/config/config.yml
+index d05ab2f..2e3186e 100644
+--- a/config/config.yml
++++ b/config/config.yml
+@@ -1,3 +1,6 @@
+ cmd.name: openweather
+ debug.mode: true
+
++openweather:
++  apiurl: http://api.openweathermap.org/data/2.5/
++  apikey: d6cca0cbd5a5f50515df2afba93e5fa6
+diff --git a/go.mod b/go.mod
+index 7106416..ee34a85 100644
+--- a/go.mod
++++ b/go.mod
+@@ -7,5 +7,7 @@ require (
+ 	flamingo.me/flamingo/v3 v3.0.0-beta.2.0.20190729150101-4d8dc5d8a2ba
+ 	flamingo.me/pugtemplate v1.0.0-alpha.1
+ 	github.com/go-test/deep v1.0.1
++	github.com/pact-foundation/pact-go v0.0.13
+ 	github.com/stretchr/objx v0.2.0 // indirect
++	github.com/stretchr/testify v1.3.0
+ )
+diff --git a/src/openweather/infrastructure/openweather/adapter.go b/src/openweather/infrastructure/openweather/adapter.go
+new file mode 100644
+index 0000000..2804472
+--- /dev/null
++++ b/src/openweather/infrastructure/openweather/adapter.go
+@@ -0,0 +1,44 @@
++package openweather
++
++import (
++	"context"
++	"errors"
++
++	"flamingo.me/example-openweather/src/openweather/domain"
++)
++
++type (
++	// Adapter for openweather
++	Adapter struct {
++		apiClient *APIClient
++	}
++
++	weatherDto struct {
++		// use https://mholt.github.io/json-to-go/ to generate it easily
++	}
++)
++
++var (
++	// Check if we really implement the interface during compilation
++	_ domain.Service = (*Adapter)(nil)
++	// ErrNoWeather is returned if no weather data is available
++	ErrNoWeather = errors.New("no weather data")
++)
++
++// Inject dependencies
++func (a *Adapter) Inject(
++	client *APIClient,
++) *Adapter {
++	a.apiClient = client
++
++	return a
++}
++
++// GetByCity returns the weather for the given city
++func (a *Adapter) GetByCity(ctx context.Context, city string) (domain.Weather, error) {
++	return domain.Weather{}, ErrNoWeather
++}
++
++func mapDto(dto *weatherDto) (domain.Weather, error) {
++	return domain.Weather{}, nil
++}
+diff --git a/src/openweather/infrastructure/openweather/adapter_test.go b/src/openweather/infrastructure/openweather/adapter_test.go
+new file mode 100644
+index 0000000..7c2252a
+--- /dev/null
++++ b/src/openweather/infrastructure/openweather/adapter_test.go
+@@ -0,0 +1,100 @@
++package openweather
++
++import (
++	"context"
++	"fmt"
++	"net/http"
++	"testing"
++
++	"flamingo.me/flamingo/v3/framework/flamingo"
++	"flamingo.me/flamingo/v3/framework/testutil"
++	"github.com/pact-foundation/pact-go/dsl"
++	"github.com/stretchr/testify/assert"
++	"github.com/stretchr/testify/require"
++)
++
++func TestAdapter(t *testing.T) {
++	testutil.WithPact(t, "flamingo-helloworld", "openweather", PactTestOpenWeatherAdapter)
++}
++
++func PactTestOpenWeatherAdapter(t *testing.T, pact *dsl.Pact) {
++	stringFixtureContent := string(`
++{
++  "coord": {
++    "lon": -0.13,
++    "lat": 51.51
++  },
++  "weather": [
++    {
++      "id": 300,
++      "main": "Drizzle",
++      "description": "light intensity drizzle",
++      "icon": "09d"
++    }
++  ],
++  "base": "stations",
++  "main": {
++    "temp": 280.32,
++    "pressure": 1012,
++    "humidity": 81,
++    "temp_min": 279.15,
++    "temp_max": 281.15
++  },
++  "visibility": 10000,
++  "wind": {
++    "speed": 4.1,
++    "deg": 80
++  },
++  "clouds": {
++    "all": 90
++  },
++  "dt": 1485789600,
++  "sys": {
++    "type": 1,
++    "id": 5091,
++    "message": 0.0103,
++    "country": "GB",
++    "sunrise": 1485762037,
++    "sunset": 1485794875
++  },
++  "id": 2643743,
++  "name": "London",
++  "cod": 200
++}
++`)
++
++	pact.AddInteraction().
++		UponReceiving("An request to openweather").
++		Given("Data for London exists").
++		WithRequest(dsl.Request{
++			Method: "GET",
++			Path:   "/data/2.5/weather",
++			Query:  "appid=APIKEY&q=London&units=metric", // Correct Order!
++		}).
++		WillRespondWith(dsl.Response{
++			Status: 200,
++			Body:   stringFixtureContent,
++		})
++
++	if err := pact.Verify(func() error {
++		var adapter = new(Adapter).Inject(
++			&APIClient{
++				baseURL:    fmt.Sprintf("http://%s:%d/data/2.5", pact.Host, pact.Server.Port),
++				apiKey:     "APIKEY",
++				logger:     flamingo.NullLogger{},
++				httpClient: http.DefaultClient,
++			},
++		)
++
++		weatherInfo, e := adapter.GetByCity(context.Background(), "London")
++
++		require.NoError(t, e)
++
++		assert.Equal(t, "Drizzle", weatherInfo.MainCharacter)
++		assert.Equal(t, int(280), weatherInfo.Temp)
++
++		return nil
++	}); err != nil {
++		t.Fatal(err)
++	}
++}
+diff --git a/src/openweather/infrastructure/openweather/apiClient.go b/src/openweather/infrastructure/openweather/apiClient.go
+new file mode 100644
+index 0000000..7cc056e
+--- /dev/null
++++ b/src/openweather/infrastructure/openweather/apiClient.go
+@@ -0,0 +1,83 @@
++package openweather
++
++import (
++	"context"
++	"errors"
++	"fmt"
++	"io"
++	"io/ioutil"
++	"net/http"
++	"net/url"
++	"strings"
++
++	"flamingo.me/flamingo/v3/framework/flamingo"
++)
++
++type (
++	// APIClient for openweather
++	APIClient struct {
++		baseURL    string
++		apiKey     string
++		httpClient *http.Client
++		logger     flamingo.Logger
++	}
++)
++
++// Inject dependencies
++func (c *APIClient) Inject(
++	httpClient *http.Client,
++	logger flamingo.Logger,
++	cfg *struct {
++		BaseURL string `inject:"config:openweather.apiurl"`
++		APIKey  string `inject:"config:openweather.apikey"`
++	},
++) *APIClient {
++	c.httpClient = httpClient
++	c.logger = logger
++	if cfg != nil {
++		c.baseURL = cfg.BaseURL
++		c.apiKey = cfg.APIKey
++	}
++
++	return c
++}
++
++func (c *APIClient) request(ctx context.Context, method, path string, body io.Reader) (*http.Response, error) {
++	path = strings.TrimRight(c.baseURL, "/") + "/" + strings.TrimLeft(path, "/")
++
++	c.logger.Debugf("openweather.apiClient.request: method: %v path: %v", method, path)
++
++	u, err := url.Parse(path)
++	if err != nil {
++		return nil, err
++	}
++
++	query := u.Query()
++	query.Add("appid", c.apiKey)
++	query.Add("units", "metric")
++
++	u.RawQuery = query.Encode()
++
++	c.logger.Info("Requesting", u.String())
++
++	request, err := http.NewRequest(method, u.String(), body)
++	if err != nil {
++		return nil, err
++	}
++	request.Header.Set("Content-Type", "application/json")
++
++	response, err := c.httpClient.Do(request.WithContext(ctx))
++
++	if err != nil {
++		return nil, err
++	}
++
++	return response, nil
++}
++
++// errorFromResponse  helper
++func (c *APIClient) errorFromResponse(response *http.Response) error {
++	c.logger.Error(fmt.Sprintf("openweather.apiClient Unexpected Status. %v  Body: %v", response.StatusCode, response.Body))
++	b, _ := ioutil.ReadAll(response.Body)
++	return errors.New(string(b))
++}
