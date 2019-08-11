@@ -6,6 +6,8 @@ import (
 	"flamingo.me/flamingo/v3/core/requestlogger"
 	"flamingo.me/flamingo/v3/core/zap"
 	"flamingo.me/pugtemplate"
+
+	"flamingo.me/example-openweather/src/openweather"
 )
 
 // main is our entry point
@@ -14,5 +16,6 @@ func main() {
 		new(zap.Module),           // log formatter
 		new(requestlogger.Module), // requestlogger show request logs
 		new(pugtemplate.Module),   // pugtemplate installs a go template engine
+		new(openweather.Module),
 	})
 }
