@@ -1,9 +1,13 @@
 extends /template/base/base
 include /atom/button/button
-include /atom/debug/debug
+include /atom/console/console
 
 block content
-  h1 Weather in #{capitalize(city)}
+  h1 Weather in #{capitalize(weather.locationName)}
+  +console(weather)
 
-  p Current Weather:
-    +debug(weather)
+  p
+    img(src='http://openweathermap.org/img/w/${weather.iconCode}.png')
+    | #{weather.temp} °C
+
+  p #{weather.description}
