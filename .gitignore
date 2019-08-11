@@ -5,12 +5,13 @@ vendor/
 .idea
 .DS_Store
 
+# pact
+**/logs/pact.log
+**/pacts/*.json
 
 # FE build and dep:
-.DS_Store
 .cache
 dist
-.idea
 .gradle
 .sass-cache
 .temp
