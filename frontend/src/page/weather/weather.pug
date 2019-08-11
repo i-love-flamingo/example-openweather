@@ -1,5 +1,9 @@
 extends /template/base/base
 include /atom/button/button
+include /atom/debug/debug
 
 block content
   h1 Weather in #{capitalize(city)}
+
+  p Current Weather:
+    +debug(weather)

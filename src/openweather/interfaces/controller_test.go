@@ -6,6 +6,8 @@ import (
 
 	"flamingo.me/flamingo/v3/framework/web"
 	"github.com/go-test/deep"
+
+	"flamingo.me/example-openweather/src/openweather/domain"
 )
 
 func TestController_Get(t *testing.T) {
@@ -42,7 +44,22 @@ func TestController_Get(t *testing.T) {
 						Status: 200,
 						Header: make(map[string][]string),
 					},
-					Data: viewData{City: "flamingo capital"},
+					Data: viewData{
+						City: "flamingo capital",
+						Weather: domain.Weather{
+							MainCharacter:       "cloudy",
+							Description:         "light intensity drizzle",
+							IconCode:            "09d",
+							Temp:                280,
+							Humidity:            80,
+							TempMin:             279,
+							TempMax:             281,
+							WindSpeed:           4.1,
+							Cloudiness:          80,
+							LocationName:        "flamingo capital",
+							LocationCountryCode: "DE",
+						},
+					},
 				},
 				Template: "weather/weather",
 			},
@@ -62,7 +79,22 @@ func TestController_Get(t *testing.T) {
 						Status: 200,
 						Header: make(map[string][]string),
 					},
-					Data: viewData{City: ""},
+					Data: viewData{
+						City: "",
+						Weather: domain.Weather{
+							MainCharacter:       "cloudy",
+							Description:         "light intensity drizzle",
+							IconCode:            "09d",
+							Temp:                280,
+							Humidity:            80,
+							TempMin:             279,
+							TempMax:             281,
+							WindSpeed:           4.1,
+							Cloudiness:          80,
+							LocationName:        "",
+							LocationCountryCode: "DE",
+						},
+					},
 				},
 				Template: "weather/weather",
 			},
