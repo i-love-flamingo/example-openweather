@@ -1,0 +1,29 @@
+{
+  "name": "flamingo-training-theme",
+  "version": "1.0.0",
+  "description": "A flamingo-theme for Training",
+  "engines": {
+    "npm": ">=5.3.0"
+  },
+  "scripts": {
+    "build": "npx flamingo-carotene build",
+    "dev": "npx flamingo-carotene dev",
+    "lint": "npx flamingo-carotene lint",
+    "test": "echo 'no tests yet'",
+    "updateFlamingoCarotene": "npm i -D eslint-config-flamingo-carotene flamingo-carotene-babel flamingo-carotene-behavior flamingo-carotene-core flamingo-carotene-dev-server flamingo-carotene-es-lint flamingo-carotene-postcss flamingo-carotene-pug flamingo-carotene-pug-lint flamingo-carotene-sass-lint flamingo-carotene-smooth-scroll-to flamingo-carotene-state-manager flamingo-carotene-webpack flamingo-carotene-webpack-svg-sprite",
+    "linkFlamingoCarotene": "npm ln eslint-config-flamingo-carotene flamingo-carotene-babel flamingo-carotene-behavior flamingo-carotene-core flamingo-carotene-dev-server flamingo-carotene-es-lint flamingo-carotene-postcss flamingo-carotene-pug flamingo-carotene-pug-lint flamingo-carotene-sass-lint flamingo-carotene-smooth-scroll-to flamingo-carotene-state-manager flamingo-carotene-webpack flamingo-carotene-webpack-svg-sprite",
+    "unlinkFlamingoCarotene": "npm i"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint-config-flamingo-carotene": "^6.2.1",
+    "flamingo-carotene-babel": "^6.2.1",
+    "flamingo-carotene-core": "^6.2.1",
+    "flamingo-carotene-dev-server": "^6.2.1",
+    "flamingo-carotene-es-lint": "^6.2.1",
+    "flamingo-carotene-pug": "^6.2.1",
+    "flamingo-carotene-pug-lint": "^6.2.1",
+    "flamingo-carotene-sass-lint": "^6.2.1",
+    "flamingo-carotene-webpack": "^6.2.1"
+  }
+}

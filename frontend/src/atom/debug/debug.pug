@@ -1,0 +1,5 @@
+mixin debug(obj)
+  if config("debug.mode")
+    .utilDebug
+      h3.utilDebugTitle Debug:
+      pre.utilDebugContents= debug(obj)

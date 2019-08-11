@@ -1,0 +1,12 @@
+mixin console(obj, group)
+  //- TODO: ADD debug condition to prevent logging on environments. For now it is needed.
+  //- if config('debug.mode')
+  if group
+    script!= 'console.group("' + group + '")'
+
+  - var output = debug(obj, true)
+
+  script!= 'console.log(' + output + ')'
+
+  if group
+    script!= 'console.groupEnd()'

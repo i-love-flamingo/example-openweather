@@ -1,0 +1,6 @@
+html
+  body
+    | error #{code}
+
+  if config('debug.mode')
+    pre.errorDebugContent= error
