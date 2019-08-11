@@ -5,6 +5,9 @@ vendor/
 .idea
 .DS_Store
 
+# pact
+**/logs/pact.log
+**/pacts/*.json
 
 # FE build and dep:
 .DS_Store
