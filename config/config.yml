@@ -1,5 +1,6 @@
-cmd.name: openweather
-debug.mode: true
+flamingo:
+  cmd.name: openweather
+  debug.mode: true
 
 openweather:
   apiurl: http://api.openweathermap.org/data/2.5/
