@@ -6,7 +6,7 @@
     "npm": ">=5.3.0"
   },
   "scripts": {
-    "build": "npx flamingo-carotene build",
+    "build": "rm -rf dist && rm -rf .cache && npx flamingo-carotene build",
     "dev": "npx flamingo-carotene dev",
     "lint": "npx flamingo-carotene lint",
     "test": "echo 'no tests yet'",
@@ -16,19 +16,19 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint-config-flamingo-carotene": "^6.2.15",
-    "flamingo-carotene-babel": "^6.2.15",
-    "flamingo-carotene-behavior": "^6.2.15",
-    "flamingo-carotene-core": "^6.2.15",
-    "flamingo-carotene-dev-server": "^6.2.15",
-    "flamingo-carotene-es-lint": "^6.2.15",
-    "flamingo-carotene-postcss": "^6.2.15",
-    "flamingo-carotene-pug": "^6.2.15",
-    "flamingo-carotene-pug-lint": "^6.2.15",
-    "flamingo-carotene-sass-lint": "^6.2.15",
-    "flamingo-carotene-smooth-scroll-to": "^6.2.15",
-    "flamingo-carotene-state-manager": "^6.2.15",
-    "flamingo-carotene-webpack": "^6.2.15",
-    "flamingo-carotene-webpack-svg-sprite": "^6.2.15"
+    "eslint-config-flamingo-carotene": "^6.7.20",
+    "flamingo-carotene-babel": "^6.7.16",
+    "flamingo-carotene-behavior": "^6.7.11",
+    "flamingo-carotene-core": "^6.7.0",
+    "flamingo-carotene-dev-server": "^6.7.20",
+    "flamingo-carotene-es-lint": "^6.7.20",
+    "flamingo-carotene-postcss": "^6.7.16",
+    "flamingo-carotene-pug": "^6.7.0",
+    "flamingo-carotene-pug-lint": "^6.7.0",
+    "flamingo-carotene-sass-lint": "^6.7.0",
+    "flamingo-carotene-smooth-scroll-to": "^6.7.10",
+    "flamingo-carotene-state-manager": "^6.7.11",
+    "flamingo-carotene-webpack": "^6.7.19",
+    "flamingo-carotene-webpack-svg-sprite": "^6.7.20"
   }
 }

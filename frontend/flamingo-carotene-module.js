@@ -1,6 +1,4 @@
 const path = require('path')
-// const mkdirp = require('mkdirp')
-// const shell = require('shelljs')
 
 class OpenWeather {
   constructor (core) {
@@ -53,17 +51,6 @@ class OpenWeather {
           }
         }
       }
-      // {
-      //   command: 'build',
-      //   handler: function (core) {
-      //     const config = core.getConfig()
-      //
-      //     // Copy assets
-      //     mkdirp(path.join(config.paths.dist), () => {
-      //       shell.cp('-r', path.join(config.paths.src, 'asset'), path.join(config.paths.dist, 'asset'))
-      //     })
-      //   }
-      // }
     ]
   }
 
