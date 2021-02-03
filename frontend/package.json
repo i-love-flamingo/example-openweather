@@ -16,19 +16,19 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint-config-flamingo-carotene": "^6.7.16",
+    "eslint-config-flamingo-carotene": "^6.7.20",
     "flamingo-carotene-babel": "^6.7.16",
     "flamingo-carotene-behavior": "^6.7.11",
     "flamingo-carotene-core": "^6.7.0",
-    "flamingo-carotene-dev-server": "^6.7.17",
-    "flamingo-carotene-es-lint": "^6.7.16",
+    "flamingo-carotene-dev-server": "^6.7.20",
+    "flamingo-carotene-es-lint": "^6.7.20",
     "flamingo-carotene-postcss": "^6.7.16",
     "flamingo-carotene-pug": "^6.7.0",
     "flamingo-carotene-pug-lint": "^6.7.0",
     "flamingo-carotene-sass-lint": "^6.7.0",
     "flamingo-carotene-smooth-scroll-to": "^6.7.10",
     "flamingo-carotene-state-manager": "^6.7.11",
-    "flamingo-carotene-webpack": "^6.7.14",
-    "flamingo-carotene-webpack-svg-sprite": "^6.7.16"
+    "flamingo-carotene-webpack": "^6.7.19",
+    "flamingo-carotene-webpack-svg-sprite": "^6.7.20"
   }
 }
